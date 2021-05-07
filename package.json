@@ -1,0 +1,23 @@
+{
+  "name": "js-task-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Demanikys/node-js-task-1.git"
+  },
+  "author": "Stanislav Snopok <snopok.stanislav@mail.ru>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Demanikys/node-js-task-1/issues"
+  },
+  "homepage": "https://github.com/Demanikys/node-js-task-1#readme",
+  "dependencies": {
+    "commander": "^7.2.0"
+  }
+}

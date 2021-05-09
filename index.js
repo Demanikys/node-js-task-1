@@ -1,6 +1,8 @@
 import { Command } from 'commander/esm.mjs';
-import cipher from './caesar-cipher.js'
+import CaesazCipher from './caesar-cipher.js'
 import fs from 'fs'
+import checkArgs from './checkArgs.js'
+import { pipeline } from 'stream';
 
 const program = new Command();
 
@@ -13,35 +15,46 @@ program
 
 const options = program.opts();
 
-if (options.action !== 'encode' && options.action !== 'decode') {
-    console.error('Action type is invalid!')
-    process.exit(-1)
-}
-
-if (!options.shift || options.shift % 1 !== 0) {
-    console.error('Have no shift, or shift is not integer number!')
-    process.exit(-1)
-}
-
-if (fs.existsSync(options.input)) {
-    const readStream = fs.createReadStream(options.input, "utf8")
-    readStream.on('data', (chunk) => {
-        const result = cipher(options.action, options.shift, chunk)
-        outputInfo(result)
-    })
-} else {
-    //read from cmd
-}
-
 const outputInfo = (chunk) => {
     if (fs.existsSync(options.output)) {
-        const writeStream = fs.createWriteStream(options.output)
-        writeStream.write(chunk)
+        return fs.createWriteStream(options.output, { flags: 'a' })
     } else {
-        console.log(chunk)
+        return process.stdout
     }
 }
 
+checkArgs(options)
 
-// const result = cipher(options.action, options.shift, text)
-// console.log(result)
+const cipher = new CaesazCipher(options.action, options.shift)
+
+if (fs.existsSync(options.input)) {
+    pipeline(
+        fs.createReadStream(options.input, "utf8"),
+        cipher,
+        outputInfo(),
+        (err) => {
+            if (err) {
+                console.error(err)
+            }
+        }
+    )
+} else {
+    pipeline(
+        process.stdin,
+        cipher,
+        outputInfo(),
+        (err) => {
+            if (err) {
+                console.error(err)
+            }
+        }
+    )
+
+
+
+    // process.stdin.pipe(cipher).pipe(process.stdout.write)
+    // process.stdin.on('data', (data) => {
+    //     const result = cipher(options.action, options.shift, data.toString('utf-8'))
+    //     outputInfo(result)
+    // })
+}

@@ -4,20 +4,23 @@ const arr_EN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 const shiftSymbol = (symbol, shift) => {
     if (arr_en.includes(symbol)) {
         let index = arr_en.findIndex((item) => item === symbol) + shift
+
         if (index < 0) {
             index = 26 + index
         } else if (index > 25) {
             index = index % 26
         }
-        console.log(index)
+
         return arr_en[index]
     } else if (arr_EN.includes(symbol)) {
         let index = arr_EN.findIndex((item) => item === symbol) + shift
+
         if (index < 0) {
             index = 26 - index
         } else if (index > 25) {
-            index = index % 25
+            index = index % 26
         }
+
         return arr_EN[index]
     } else {
         return symbol
